@@ -1,4 +1,4 @@
-const { User } 	    = require('../models');
+const { users } 	    = require('../models');
 const validator     = require('validator');
 const { to, TE }    = require('../services/util.service');
 
@@ -31,7 +31,7 @@ const createUser = async (userInfo) => {
         auth_info.method = 'email';
         userInfo.email = unique_key;
 
-        [err, user] = await to(User.create(userInfo));
+        [err, user] = await to(users.create(userInfo));
         if(err) TE('user already exists with that email');
 
         return user;
@@ -40,7 +40,7 @@ const createUser = async (userInfo) => {
         auth_info.method = 'phone';
         userInfo.phone = unique_key;
 
-        [err, user] = await to(User.create(userInfo));
+        [err, user] = await to(users.create(userInfo));
         if(err) TE('user already exists with that phone number');
 
         return user;
@@ -65,13 +65,13 @@ const authUser = async function(userInfo){//returns token
     if(validator.isEmail(unique_key)){
         auth_info.method='email';
 
-        [err, user] = await to(User.findOne({where:{email:unique_key}}));
+        [err, user] = await to(users.findOne({where:{email:unique_key}}));
         if(err) TE(err.message);
 
     }else if(validator.isMobilePhone(unique_key, 'any')){//checks if only phone number was sent
         auth_info.method='phone';
 
-        [err, user] = await to(User.findOne({where:{phone:unique_key }}));
+        [err, user] = await to(users.findOne({where:{phone:unique_key }}));
         if(err) TE(err.message);
 
     }else{

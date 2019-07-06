@@ -4,7 +4,6 @@ const { to, ReE, ReS }  = require('../services/util.service');
 
 const create = async function(req, res){
     const body = req.body;
-
     if(!body.unique_key && !body.email && !body.phone){
         return ReE(res, 'Please enter an email or phone number to register.');
     } else if(!body.password){

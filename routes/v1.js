@@ -2,9 +2,10 @@ const express 			= require('express');
 const router 			= express.Router();
 
 const UserController 	= require('../controllers/user.controller');
-const CompanyController = require('../controllers/company.controller');
+const PatientController 	= require('../controllers/patient.controller');
+const PartnersController = require('../controllers/partners.controller');
 const HomeController 	= require('../controllers/home.controller');
-
+const TestsController =  require('../controllers/tests.controller');
 const custom 	        = require('./../middleware/custom');
 
 const passport      	= require('passport');
@@ -24,16 +25,13 @@ router.put(     '/users',           passport.authenticate('jwt', {session:false}
 router.delete(  '/users',           passport.authenticate('jwt', {session:false}), UserController.remove);     // D
 router.post(    '/users/login',     UserController.login);
 
-router.post(    '/companies',             passport.authenticate('jwt', {session:false}), CompanyController.create);                  // C
-router.get(     '/companies',             passport.authenticate('jwt', {session:false}), CompanyController.getAll);                  // R
-
-router.get(     '/companies/:company_id', passport.authenticate('jwt', {session:false}), custom.company, CompanyController.get);     // R
-router.put(     '/companies/:company_id', passport.authenticate('jwt', {session:false}), custom.company, CompanyController.update);  // U
-router.delete(  '/companies/:company_id', passport.authenticate('jwt', {session:false}), custom.company, CompanyController.remove);  // D
+router.get(     '/patient',           passport.authenticate('jwt', {session:false}), PatientController.get); 
+router.post(    '/partners',           PartnersController.create);
+router.post(    '/partners/login',     PartnersController.login);
 
 router.get('/dash', passport.authenticate('jwt', {session:false}),HomeController.Dashboard)
 
-
+router.get( '/tests',           passport.authenticate('jwt', {session:false}), TestsController.get);
 //********* API DOCUMENTATION **********
 router.use('/docs/api.json',            express.static(path.join(__dirname, '/../public/v1/documentation/api.json')));
 router.use('/docs',                     express.static(path.join(__dirname, '/../public/v1/documentation/dist')));

@@ -1,4 +1,4 @@
-const { User } 	    = require('../models');
+const { User , Partners } 	    = require('../models');
 const validator     = require('validator');
 const { to, TE }    = require('../services/util.service');
 
@@ -88,3 +88,59 @@ const authUser = async function(userInfo){//returns token
 
 }
 module.exports.authUser = authUser;
+
+
+
+const createPartners = async (userInfo) => {
+    let unique_key, auth_info, err;
+
+    auth_info={};
+    auth_info.status='create';
+
+    if(!userInfo.name) TE('Please enter an username');
+
+
+    if(!userInfo.secret) TE('Please enter a secret key');
+
+    if(userInfo.name && userInfo.secret){
+
+        [err, partner] = await to(Partners.create(userInfo));
+        if(err) {
+            console.log("===========>",err)
+            TE('partner already exists with that name');
+        }
+
+        return partner;
+
+    }else{
+        TE('A valid email or phone number was not entered.');
+    }
+}
+module.exports.createPartners = createPartners;
+
+const authPartners = async function(userInfo){//returns token
+    let unique_key;
+    let auth_info = {};
+    auth_info.status = 'login';
+    
+
+    if(!userInfo.name) TE('Please enter an username');
+
+
+    if(!userInfo.secret) TE('Please enter a secret key');
+
+    let partner;
+    [err, partner] = await to(Partners.findOne({where:{name:userInfo.name}}));
+        if(err) TE(err.message);
+    
+
+    if(!partner) TE('Not registered');
+
+    [err, partner] = await to(partner.comparePassword(userInfo.secret));
+
+    if(err) TE(err.message);
+
+    return partner;
+
+}
+module.exports.authPartners = authPartners;

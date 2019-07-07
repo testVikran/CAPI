@@ -1,0 +1,25 @@
+/* jshint indent: 2 */
+
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('VisitedStatus', {
+    id: {
+      type: DataTypes.INTEGER(11).UNSIGNED,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+      field: 'id'
+    },
+    statusId: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      field: 'status_id'
+    },
+    name: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+      field: 'name'
+    }
+  }, {
+    tableName: 'visited_status'
+  });
+};
